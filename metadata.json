@@ -1,0 +1,6 @@
+{
+  "name": "Al Hera Freelancing Care",
+  "description": "Educational learning management web application for Al Hera Freelancing Care institute in Bangladesh with courses, exams, fees, certificates, and bilingual support.",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}

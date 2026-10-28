@@ -1,0 +1,91 @@
+rules_version = '2';
+
+service cloud.firestore {
+  match /databases/{database}/documents {
+    // Global Safety Net
+    match /{document=**} {
+      allow read, write: if false;
+    }
+
+    function isSignedIn() {
+      return request.auth != null;
+    }
+
+    function isAdmin() {
+      return isSignedIn() && (
+        request.auth.token.email == 'nisadandnisanfoodltd@gmail.com' ||
+        request.auth.token.email.lower() == 'nisadandnisanfoodltd@gmail.com' ||
+        exists(/databases/$(database)/documents/admins/$(request.auth.uid))
+      );
+    }
+
+    function isOwner(userId) {
+      return isSignedIn() && request.auth.uid == userId;
+    }
+
+    // Admins registry
+    match /admins/{adminId} {
+      allow read: if isSignedIn();
+      allow write: if isAdmin() || (isSignedIn() && request.auth.uid == adminId && (request.auth.token.email == 'nisadandnisanfoodltd@gmail.com' || request.auth.token.email.lower() == 'nisadandnisanfoodltd@gmail.com'));
+    }
+
+    // User accounts
+    match /users/{userId} {
+      allow read: if isOwner(userId) || isAdmin();
+      allow create: if isOwner(userId) || isAdmin();
+      allow update: if isOwner(userId) || isAdmin();
+      allow delete: if isAdmin();
+    }
+
+    // Course catalog & syllabus (Publicly readable)
+    match /courses/{courseId} {
+      allow read: if true;
+      allow write: if isAdmin();
+    }
+
+    // Student fees & payment ledger
+    match /fees/{feeId} {
+      allow read: if (isSignedIn() && resource.data.studentId == request.auth.uid) || isAdmin();
+      allow create: if isSignedIn();
+      allow update: if isAdmin() || (isSignedIn() && resource.data.studentId == request.auth.uid);
+      allow delete: if isAdmin();
+    }
+
+    // Examinations (Questions & Configuration)
+    match /exams/{examId} {
+      allow read: if isSignedIn();
+      allow write: if isAdmin();
+    }
+
+    // Exam Submissions
+    match /submissions/{submissionId} {
+      allow read: if (isSignedIn() && resource.data.studentId == request.auth.uid) || isAdmin();
+      allow create: if isSignedIn() && request.resource.data.studentId == request.auth.uid;
+      allow update, delete: if isAdmin();
+    }
+
+    // Certificates (Publicly readable for verification)
+    match /certificates/{certificateId} {
+      allow read: if true;
+      allow write: if isAdmin();
+    }
+
+    // Notices and class routines (Publicly readable)
+    match /notices/{noticeId} {
+      allow read: if true;
+      allow write: if isAdmin();
+    }
+
+    // Student lesson progress tracking
+    match /progress/{progressId} {
+      allow read: if isSignedIn();
+      allow write: if isSignedIn() && (request.auth.uid == request.resource.data.studentId || isAdmin());
+    }
+
+    // Site settings & homepage customization (Public read, admin write)
+    match /settings/{settingId} {
+      allow read: if true;
+      allow write: if isAdmin();
+    }
+  }
+}
