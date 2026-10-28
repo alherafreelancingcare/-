@@ -117,6 +117,7 @@ const MainAppContent: React.FC = () => {
         currentView={currentView}
         setCurrentView={handleSetCurrentView}
         onOpenAuth={handleOpenAuth}
+        onSelectCourse={(course) => setSelectedCourse(course)}
       />
 
       {/* Main View Router */}

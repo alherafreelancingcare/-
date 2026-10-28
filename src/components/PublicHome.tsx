@@ -50,7 +50,10 @@ export const PublicHome: React.FC<PublicHomeProps> = ({
         <div className="absolute inset-0 opacity-10 bg-[radial-gradient(#3b82f6_1px,transparent_1px)] [background-size:16px_16px] pointer-events-none"></div>
 
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
-          <div className="text-center max-w-3xl mx-auto space-y-6">
+          <div
+            style={{ borderStyle: 'ridge', backgroundColor: '#171414' }}
+            className="text-center max-w-3xl mx-auto space-y-6 p-6 sm:p-8 rounded-3xl border-4 border-slate-700/60 shadow-2xl"
+          >
             <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-blue-800/60 border border-blue-600/40 text-blue-200 text-xs sm:text-sm font-medium backdrop-blur-xs shadow-xs animate-in fade-in duration-300">
               <Sparkles className="w-4 h-4 text-amber-300 shrink-0" />
               <span>{(language === 'bn' ? settings.heroBadgeBn : settings.heroBadgeEn) || t('heroBadge')}</span>
@@ -81,7 +84,8 @@ export const PublicHome: React.FC<PublicHomeProps> = ({
 
               <button
                 onClick={() => onOpenAuth('register')}
-                className="px-6 py-3.5 bg-white/10 hover:bg-white/20 active:scale-95 text-white font-bold text-sm rounded-xl border border-white/20 backdrop-blur-xs flex items-center gap-2 transition cursor-pointer"
+                style={{ borderStyle: 'dotted' }}
+                className="px-6 py-3.5 bg-white/10 hover:bg-white/20 active:scale-95 text-white font-bold text-sm rounded-xl border-2 border-white/40 backdrop-blur-xs flex items-center gap-2 transition cursor-pointer"
               >
                 <span>{t('heroEnrollBtn')}</span>
                 <ArrowRight className="w-4 h-4 text-blue-400" />
